@@ -128,6 +128,7 @@
     "teacher_calendar": [
         {
             "id": "1",
+            "title": "demo",
             "teacher": {
                 "id": "11112",
                 "name": "Nguyen Van A",
@@ -156,6 +157,7 @@
         },
         {
             "id": "2",
+            "title": "demo",
             "teacher": {
                 "id": "11113",
                 "name": "Le Van B",
