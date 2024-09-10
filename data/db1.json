@@ -1,0 +1,190 @@
+{
+    "roles": [
+        {
+            "id": "1",
+            "name": "ROLE_USER"
+        },
+        {
+            "id": "2",
+            "name": "ROLE_TEACHER"
+        }
+    ],
+    "teacher": [
+        {
+            "id": "11112",
+            "name": "Nguyen Van A",
+            "avatar": "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
+            "roles": {
+                "id": "2",
+                "name": "ROLE_TEACHER"
+            },
+            "ownerColor": "#ffaa00"
+        },
+        {
+            "id": "11113",
+            "name": "Le Van B",
+            "avatar": "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
+            "roles": {
+                "id": "2",
+                "name": "ROLE_TEACHER"
+            },
+            "ownerColor": "#ffaa00"
+        },
+        {
+            "id": "11114",
+            "name": "Tran Van C",
+            "avatar": "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
+            "roles": {
+                "id": "2",
+                "name": "ROLE_TEACHER"
+            },
+            "ownerColor": "#ffaa00"
+        },
+        {
+            "id": "11115",
+            "name": "Nguyen Van D",
+            "avatar": "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
+            "roles": {
+                "id": "2",
+                "name": "ROLE_TEACHER"
+            },
+            "ownerColor": "#ffaa00"
+        }
+    ],
+    "technical_teacher": [
+        {
+            "id": "00001",
+            "name": "PHP",
+            "teacher": {
+                "id": "11112",
+                "name": "Nguyen Van A",
+                "avatar": "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
+                "roles": {
+                    "id": "2",
+                    "name": "ROLE_TEACHER"
+                },
+                "ownerColor": "#ffaa00"
+            }
+        },
+        {
+            "id": "00002",
+            "name": "Java",
+            "teacher": {
+                "id": "11113",
+                "name": "Le Van B",
+                "avatar": "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
+                "roles": {
+                    "id": "2",
+                    "name": "ROLE_TEACHER"
+                },
+                "ownerColor": "#ffaa00"
+            }
+        },
+        {
+            "id": "00003",
+            "name": "JavaScript",
+            "teacher": {
+                "id": "11114",
+                "name": "Tran Van C",
+                "avatar": "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
+                "roles": {
+                    "id": "2",
+                    "name": "ROLE_TEACHER"
+                },
+                "ownerColor": "#ffaa00"
+            }
+        }
+    ],
+    "users": [
+        {
+            "id": "44441",
+            "full_name": "Trần Tiểu Vi",
+            "age": "20",
+            "isDelete": "false",
+            "created_by": "vitt",
+            "created_date": "2024-09-20",
+            "modified_date": "2024-09-22",
+            "modified_by": "datlv",
+            "roles": {
+                "id": "1",
+                "name": "ROLE_USER"
+            }
+        },
+        {
+            "id": "44442",
+            "full_name": "Lương Văn Đạt",
+            "age": "21",
+            "isDelete": "false",
+            "created_by": "datlv",
+            "created_date": "2024-09-22",
+            "modified_date": "2024-09-23",
+            "modified_by": "vitt",
+            "roles": {
+                "id": "1",
+                "name": "ROLE_USER"
+            }
+        }
+    ],
+    "teacher_calendar": [
+        {
+            "id": "1",
+            "teacher": {
+                "id": "11112",
+                "name": "Nguyen Van A",
+                "avatar": "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
+                "roles": {
+                    "id": "2",
+                    "name": "ROLE_TEACHER"
+                },
+                "ownerColor": "#ffaa00"
+            },
+            "date_appointment": "2024-09-15",
+            "time_start": "20:50",
+            "time_end": "21:00",
+            "status": "Đã thành công",
+            "users": {
+                "id": "44441",
+                "full_name": "Trần Tiểu Vi",
+                "age": "20",
+                "isDelete": "false",
+                "created_by": "vitt",
+                "created_date": "2024-09-20",
+                "modified_date": "2024-09-22",
+                "modified_by": "datlv"
+            },
+            "note": "hỗ trợ lần đầu"
+        },
+        {
+            "id": "2",
+            "teacher": {
+                "id": "11113",
+                "name": "Le Van B",
+                "avatar": "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
+                "roles": {
+                    "id": "2",
+                    "name": "ROLE_TEACHER"
+                },
+                "ownerColor": "#ffaa00"
+            },
+            "date_appointment": "2024-09-19",
+            "time_start": "8:20",
+            "time_end": "8:30",
+            "status": "Đã thành công",
+            "users": {
+                "id": "44442",
+                "full_name": "Lương Văn Đạt",
+                "age": "21",
+                "isDelete": "false",
+                "created_by": "datlv",
+                "created_date": "2024-09-22",
+                "modified_date": "2024-09-23",
+                "modified_by": "vitt",
+                "roles": {
+                    "id": "1",
+                    "name": "ROLE_USER"
+                }
+            },
+            "note": "hỗ trợ tiếp phần tính kế thừa hôm trước"
+        }
+    ]
+}
