@@ -170,7 +170,6 @@ const searchCalendar = handleSubmit(async (formData) => {
     }
 });
 
-
 const onCourseChange = () => {
     chapter.value = "";
     teacher.value = null;

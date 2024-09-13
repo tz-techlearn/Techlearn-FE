@@ -1,7 +1,7 @@
 <template>
-  <ejs-schedule height="750px" width="100%" ref='scheduleObj' :selectedDate="selectedDate"
-    :eventSettings="eventSettings" :actionBegin="onActionBegin" class="calendar" :editorTemplate="'editorTemplate'"
-    :eventRendered="onEventRendered" :startHour="startHour" :endHour="endHour">
+  <ejs-schedule height="750px" width="100%" ref='scheduleObj' :selectedDate="selectedDate" :eventSettings="eventSettings" :actionBegin="onActionBegin"
+    class="calendar" :editorTemplate="'editorTemplate'" :eventRendered="onEventRendered" :startHour="startHour" :endHour="endHour"
+    :timeScale="timeScale">
     <template v-slot:editorTemplate>
       <table class="custom-event-editor" width="100%" cellpadding="5">
         <tbody>
@@ -14,8 +14,8 @@
           <tr>
             <td class="e-textlabel">Giảng viên</td>
             <td colspan="4">
-              <ejsDropdownlist id='OwnerId' name="OwnerId" class="e-field" placeholder='Choose status'
-                :dataSource='ownerDataSource' :fields="dropListFields">
+              <ejsDropdownlist id='OwnerId' name="OwnerId" class="e-field" placeholder='Choose status' :dataSource='ownerDataSource'
+                :fields="dropListFields">
               </ejsDropdownlist>
             </td>
           </tr>
@@ -49,8 +49,8 @@
       <e-view option="Agenda"></e-view>
     </e-views>
     <e-resources>
-      <e-resource field="OwnerId" title="Owner" name="Owners" :dataSource="ownerDataSource" textField="OwnerText"
-        idField="Id" colorField="OwnerColor">
+      <e-resource field="OwnerId" title="Owner" name="Owners" :dataSource="ownerDataSource" textField="OwnerText" idField="Id"
+        colorField="OwnerColor">
       </e-resource>
     </e-resources>
   </ejs-schedule>
@@ -71,7 +71,7 @@ import { watch } from "vue";
 import Swal from "sweetalert2";
 import { L10n, setCulture } from "@syncfusion/ej2-base";
 import viLocale from "../../locale/vi.json";
-import { loadCldr} from '@syncfusion/ej2-base';
+import { loadCldr } from '@syncfusion/ej2-base';
 import frNumberData from '@syncfusion/ej2-cldr-data/main/vi/numbers.json';
 import frtimeZoneData from '@syncfusion/ej2-cldr-data/main/vi/timeZoneNames.json';
 import frGregorian from '@syncfusion/ej2-cldr-data/main/vi/ca-gregorian.json';
@@ -87,7 +87,7 @@ provide("schedule", [Day, Week, WorkWeek, Month, Agenda, DragAndDrop]);
 
 const remoteData = new DataManager({
   // url: 'http://localhost:3000/dataSource',
-  url: `${props.url}/teacher-calendar`,
+  url: `${props.url}`,
   adaptor: new WebApiAdaptor,
   crossDomain: true
 });
@@ -102,7 +102,12 @@ const eventSettings = ref({
 });
 
 const startHour = "08:00";
-const endHour = "20:00";
+const endHour = "21:00";
+const timeScale = {
+  enable: true,
+  interval: 10,
+  slotCount: 1
+};
 
 const dropListFields = {
   text: "OwnerText",
@@ -110,9 +115,27 @@ const dropListFields = {
 }
 
 const getOwnerDataSource = async () => {
-  const res = await axios.get(`${props.url}/teachers/`);
+  const res = await axios.get("http://localhost:8181/api/v1/teachers/");
   ownerDataSource.value = res.data;
 }
+
+
+const getEvent = async () => {
+  try {
+    const res = await axios.get(`${rootApi}/find-by-id/${props.id}`);
+    const filtered = res.data.filter((event) => {
+      return new Date(event.StartTime) >= new Date();
+    })
+    console.log(res.data);
+    eventSettings.value = {
+      dataSource: res.data
+    };
+  } catch (error) {
+    console.error('Error fetching or filtering events:', error);
+  }
+};
+;
+
 
 const onEventRendered = (args) => {
   const ownerId = args.data.OwnerId;
@@ -123,22 +146,22 @@ const onEventRendered = (args) => {
                             <img width="24" height="24" src="${owner.avatar}" 
                               class="owner-avatar rounded-circle img-fluid border border-white" />
                           </div>`;
-      
+
       const eventWidth = args.element.offsetWidth;
-      const avatarWidth = 30; 
-      const availableWidth = eventWidth - avatarWidth - 10; 
-      
+      const avatarWidth = 30;
+      const availableWidth = eventWidth - avatarWidth - 10;
+
       let subjectText = args.data.Subject;
       if (subjectText.length > 20) {
         subjectText = subjectText.substring(0, 17) + '...';
       }
-      
+
       args.element.innerHTML = `
         <div class="d-flex align-items-center h-100 overflow-hidden">
           ${avatarHtml}
           <div class="text-truncate" style="max-width: ${availableWidth}px;">${subjectText}</div>
         </div>`;
-      
+
       args.element.title = args.data.Subject;
     }
   }
@@ -162,56 +185,16 @@ const onActionBegin = async (args) => {
         StartTime: formatDate(eventData.StartTime),
         EndTime: formatDate(eventData.EndTime),
       };
-      await axios.post(`${props.url}/teacher-calendar`, formattedEventData);
-      Swal.fire({
-        text: "Cập nhật lịch thành công",
-        icon: "success",
-        confirmButtonText: "Đồng ý (5)",
-        timer: 5000,
-        timerProgressBar: true,
-        didOpen: () => {
-          const swalConfirmButton = Swal.getConfirmButton();
-          let timeLeft = 5;
-
-          timerInterval = setInterval(() => {
-            timeLeft -= 0.1;
-            swalConfirmButton.textContent = `Đồng ý (${Math.ceil(
-              timeLeft
-            )})`;
-          }, 100);
-        },
-        willClose: () => {
-          clearInterval(timerInterval);
-        },
-      });
+      await axios.post(`${props.url}`, formattedEventData);
+      toast.success('Tạo lịch thành công!');
     } catch (error) {
       console.error('Error adding event:', error);
-      toast.error('Thêm lịch thất bại!Bạn phải thêm lịch vào ngày và giờ lớn hơn ngày và giờ hiện tại');
+      toast.error('Bạn phải thêm lịch vào ngày và giờ lớn hơn ngày và giờ hiện tại!');
     }
   } else if (args.requestType === 'eventRemove') {
     try {
-      await axios.delete(`${props.url}/teacher-calendar/${args.data[0].Id}`);
-      Swal.fire({
-        text: "Bạn đã xóa lịch thành công",
-        icon: "success",
-        confirmButtonText: "Đồng ý (5)",
-        timer: 5000,
-        timerProgressBar: true,
-        didOpen: () => {
-          const swalConfirmButton = Swal.getConfirmButton();
-          let timeLeft = 5;
-
-          timerInterval = setInterval(() => {
-            timeLeft -= 0.1;
-            swalConfirmButton.textContent = `Đồng ý (${Math.ceil(
-              timeLeft
-            )})`;
-          }, 100);
-        },
-        willClose: () => {
-          clearInterval(timerInterval);
-        },
-      });
+      await axios.delete(`${props.url}/${args.data[0].Id}`);
+      toast.success('Xóa lịch thành công!');
     } catch (error) {
       console.error('Error deleting event:', error);
       toast.error('Không thể xóa sự kiện!');
@@ -219,36 +202,23 @@ const onActionBegin = async (args) => {
   } else if (args.requestType === 'eventChange') {
     try {
 
-      const formattedEventData = {
+      let formattedEventData = {
         ...args.data,
         StartTime: formatDate(args.data.StartTime),
         EndTime: formatDate(args.data.EndTime),
       };
 
+      if (props.url.includes('student')) {
+        formattedEventData = {
+          ...formattedEventData,
+          UserId: '4d281145-ef96-4320-b42b-a94463effcdf',
+        };
+      }
+
       console.log(formattedEventData);
 
-      await axios.put(`${props.url}/teacher-calendar/${formattedEventData.Id}`, formattedEventData);
-      Swal.fire({
-        text: "Cập nhật lại lịch thành công",
-        icon: "success",
-        confirmButtonText: "Đồng ý (5)",
-        timer: 5000,
-        timerProgressBar: true,
-        didOpen: () => {
-          const swalConfirmButton = Swal.getConfirmButton();
-          let timeLeft = 5;
-
-          timerInterval = setInterval(() => {
-            timeLeft -= 0.1;
-            swalConfirmButton.textContent = `Đồng ý (${Math.ceil(
-              timeLeft
-            )})`;
-          }, 100);
-        },
-        willClose: () => {
-          clearInterval(timerInterval);
-        },
-      });
+      await axios.put(`${props.url}/${formattedEventData.Id}`, formattedEventData);
+      toast.success('Cập nhật lại lịch thành công!');
     } catch (error) {
       console.error('Error updating event:', error);
       toast.error('Cập nhật lịch thất bại!');

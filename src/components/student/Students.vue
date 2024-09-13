@@ -62,7 +62,7 @@ import axios from 'axios';
 
 // import Modal from '../Modal/Modal.vue';
 import { useStore } from 'vuex';
-import FormStudent from './FormStudent.vue';
+import FormStudent from './StudentCalendar.vue';
 
 const list = ref([]);
 const seletedObject = ref(null);
