@@ -49,7 +49,7 @@ import { toast } from 'vue3-toastify';
 const router = useRouter();
 const toggleSidebar = inject('toggleSidebar');
 const isLoggedIn = ref(false);
-const user = ref({ fullName: '',avatar: '' });
+const user = ref({ fullName: '' ,avatar: ''});
 
 onMounted(() => {
     checkLoginStatus();
