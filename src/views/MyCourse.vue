@@ -37,7 +37,17 @@
               }}
             </p>
           </div>
-          <button class="btn btn-primary mx-3 my-2 btn-buy">
+          <div
+            v-if="loadingStates[index]"
+            class="d-flex justify-content-center pb-3"
+          >
+            <div class="spinner"></div>
+          </div>
+          <button
+            v-else
+            class="btn btn-primary mx-3 my-2 btn-buy"
+            @click="handleClick(studentCourse, index)"
+          >
             {{ studentCourse.status === "PAID" ? "Học" : "Mua" }}
           </button>
         </template>
@@ -52,6 +62,7 @@ import { ref, onMounted, computed } from "vue";
 import avatar from "../../public/avatar.jpg";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { toast } from "vue3-toastify";
 
 const router = useRouter();
 const store = useStore();
@@ -59,7 +70,7 @@ const store = useStore();
 const rootApi = process.env.VUE_APP_ROOT_API;
 const courses = ref([]);
 const student_courses = ref([]);
-const assignmentCounts = ref({});
+const loadingStates = ref([]);
 const userID = computed(() => store.getters.user);
 
 const fetchStudentCourses = async () => {
@@ -67,6 +78,7 @@ const fetchStudentCourses = async () => {
     `${rootApi}/student-courses?id=${userID.value.id}`
   );
   student_courses.value = res.data.result;
+  loadingStates.value = Array(student_courses.value.length).fill(false);
 };
 
 const fetchCourses = async () => {
@@ -83,6 +95,23 @@ const navigateToAssignment = (courseId) => {
     name: "courseDetail",
     params: { id: courseId },
   });
+};
+
+const handleClick = async (studentCourse, index) => {
+  try {
+    loadingStates.value[index] = true;
+    if (studentCourse.status === "TRIAL") {
+      const response = await axios.post(
+        `${rootApi}/buy_course?idUser=${userID.value.id}&idCourse=${studentCourse.idCourse}`
+      );
+      await fetchStudentCourses();
+      toast.success("Mua khóa học thành công!");
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    loadingStates.value[index] = false;
+  }
 };
 
 onMounted(async () => {
@@ -213,5 +242,25 @@ onMounted(async () => {
   border: none;
   color: #333;
   font-weight: 500;
+}
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left: 4px solid white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
