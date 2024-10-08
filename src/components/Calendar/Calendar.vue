@@ -254,10 +254,10 @@ const onActionBegin = async (args) => {
         EndTimezone: 'Asia/Bangkok',
       };
 
-      if (window.location.href.includes('student') && props.calendarType === 'other') {
+      if ( props.calendarType === 'other') {
         isLoading.value = true;
         isStudentBooking.value = true;
-
+            
         await axios.post(`${rootApi}/student/${user.value.id}/calendar`, {
           ...formattedEventData,
           UserId: user.value.id,

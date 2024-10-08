@@ -35,6 +35,7 @@
                     {{ teach.OwnerText }}
                   </option>
                 </select>
+                <small class="text-danger">{{ teacherError }}</small>
               </div>
               <div class="col-md-4">
                 <button type="submit" class="btn btn-primary w-100">
@@ -48,7 +49,7 @@
 
       <div class="card">
         <div class="card-body">
-          <Calendar :url="calendarUrl" :clickable="isFilterApplied"
+          <Calendar :url="url" :clickable="isFilterApplied"
             :calendarType="stateButtonFormStudent ? 'other' : 'mine'" :ownerId="ownerId" />
         </div>
       </div>
@@ -71,31 +72,28 @@ const store = useStore();
 
 const stateButtonFormStudent = ref(false);
 const accessToken = localStorage.getItem("accessToken");
-
+const calendarUrl = ref();
 const { handleSubmit, resetForm } = useForm({
   initialValues: {
-    course: null,
     chapter: null,
     teacher: null,
   },
   validationSchema: yup.object({
-    course: yup
-      .object().nullable()
-      .required('*bắt buộc'),
     chapter: yup
       .object().nullable()
       .required('*bắt buộc'),
+      teacher: yup
+      .object().nullable()
+      .required('*bắt buộc')
   }),
 });
 
-const { value: course, errorMessage: courseError } = useField('course');
 const { value: chapter, errorMessage: chapterError } = useField('chapter');
 const { value: teacher, errorMessage: teacherError } = useField('teacher');
 const url = ref("");
 const urlCalendarOfStudent = ref("");
 const teachers = ref([]);
 const ownerId = ref();
-const listCourse = ref([]);
 const listChapters = ref([]);
 const user = computed(() => store.getters.user);
 const isFilterApplied = ref(false);
@@ -104,16 +102,14 @@ const courseId = route.params.id;
 
 const toggleCalendarForm = () => {
   stateButtonFormStudent.value = !stateButtonFormStudent.value;
+  console.log(stateButtonFormStudent.value);
+  
 };
 
 const getAllCalendars = () => {
   urlCalendarOfStudent.value = `${rootApi}/student/${user.value.id}/calendar`;
 };
 
-const onCourseChange = async () => {
-  await getChapters();
-  await getTeachers();
-}
 
 const getChapters = async () => {
   try {
@@ -145,68 +141,17 @@ const getTeachers = async () => {
 const searchCalendar = handleSubmit(async (formData) => {
 
   try {
+    
     isFilterApplied.value = true;
-    const { course, chapter, teacher } = formData;
-
-    if (teacher === null) {
-      url.value = `${rootApi}/teacher/calendar/${courseId}/chapter/${chapter.id}/`;
-    } else {
+    const { chapter, teacher } = formData;
       url.value = `${rootApi}/teacher/${teacher.Id}/calendar`;
       ownerId.value = teacher.Id;
-    }
-
   } catch (error) {
     isFilterApplied.value = false;
     toast.error("Không có khung giờ giảng viên!");
   }
 });
 
-const fetchCoursesByUser = async () => {
-  try {
-    const res = await axios.get(`${rootApi}/courses`, {
-      params: { id: user.value.id, page: 1, pageSize: 10 },
-      headers: { 'Authorization': `Bearer ${accessToken}` }
-    });
-
-    if (res.status === 200) {
-      listCourse.value = res.data.result.items.data;
-    } else {
-      console.error("Error fetching courses");
-      toast.error("Không thể lấy danh sách khóa học");
-    }
-  } catch (error) {
-    console.error("Error fetching courses:", error);
-    toast.error("Lỗi khi lấy danh sách khóa học");
-  }
-};
-
-const fetchChaptersByCourseId = async (courseId) => {
-  try {
-    const res = await axios.get(`${rootApi}/chapters`, {
-      params: { idCourse: courseId },
-      headers: { 'Authorization': `Bearer ${accessToken}` }
-    });
-
-    if (res.status === 200) {
-      listChapters.value = res.data.result.data.items;
-    } else {
-      console.error("Error fetching chapters");
-      toast.error("Không thể lấy danh sách chương");
-    }
-  } catch (error) {
-    console.error("Error fetching chapters:", error);
-    toast.error("Lỗi khi lấy danh sách chương");
-  }
-};
-
-watch(course, (newCourse) => {
-  if (newCourse) {
-    const selectedCourse = listCourse.value.find(c => c.name === newCourse);
-    if (selectedCourse) {
-      fetchChaptersByCourseId(selectedCourse.id);
-    }
-  }
-});
 
 watch(user, (newUser) => {
     if (newUser) {

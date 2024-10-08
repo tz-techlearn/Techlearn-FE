@@ -40,6 +40,8 @@ const rootApi = process.env.VUE_APP_ROOT_API;
 const courses = ref([]);
 const studentCourses = ref([]);
 const userID = computed(() => store.getters.user);
+console.log(userID);
+
 
 const fetchCourses = async () => {
   const response = await axios.get(`${rootApi}/courses?id=${userID.value.id}`);
