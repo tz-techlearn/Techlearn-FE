@@ -33,7 +33,6 @@ import { ref, onMounted, computed } from "vue";
 import avatar from "../../public/avatar.jpg";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-
 const router = useRouter();
 const store = useStore();
 

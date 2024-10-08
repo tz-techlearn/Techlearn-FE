@@ -8,9 +8,9 @@
         <li v-if="isTeacher || isMentor" class="active">
           <router-link to="/teacher" class="nav-link">Lịch cá nhân</router-link>
         </li>
-        <li v-if="isUser">
+        <!-- <li v-if="isUser">
           <router-link to="/student" class="nav-link">Đặt lịch học</router-link>
-        </li>
+        </li> -->
         <li v-if="isTeacher">
           <router-link to="/listPrompt">Cấu hình AI</router-link>
         </li>

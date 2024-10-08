@@ -18,13 +18,16 @@
 
     <!-- Đặt lịch  -->
     <div v-if="activeTab === 'schedule'">
-        <h3 class="content-title">Đặt lịch hỗ trợ</h3>
+        <h3 class="content-title">
+            <StudentCalendar></StudentCalendar>
+        </h3>
     </div>
 </template>
 
 <script setup>
 import CourseDetails from '@/components/Course/CourseDetails.vue';
-import { ref } from "vue";
+import StudentCalendar from '@/components/student/StudentCalendar.vue';
+import { ref} from 'vue';
 const activeTab = ref("content");
 </script>
 

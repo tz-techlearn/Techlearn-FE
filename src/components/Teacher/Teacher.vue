@@ -2,7 +2,7 @@
   <div class="teacher-tab">
     <b-tabs content-class="mt-3">
       <b-tab title="Lịch bận" active>
-        <Calendar v-if="url" :url="url" :key="url" calendarType="mine" clickable="true" />
+        <Calendar v-if="url" :url="url" :key="url" :ownerId="user.id" calendarType="mine" clickable="true" />
       </b-tab>
       <b-tab title="Lịch rảnh">
         <Calendar v-if="url" :url="url" :key="url" calendarType="mine" clickable="true" />
