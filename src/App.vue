@@ -26,6 +26,7 @@ import { ref, provide, computed, onMounted } from 'vue';
 import router from './router';
 import { useStore } from 'vuex';
 import axios from 'axios';
+
 const rootApi = process.env.VUE_APP_ROOT_API;
 const isSidebarCollapsed = ref(false);
 
@@ -41,19 +42,19 @@ const isLoginPage = computed(() => route.path === "/login");
 
 const isLogin = localStorage.getItem("accessToken");
 const isValidToken = ref(false);
-const checkIsValidToken = async() =>{
+const checkIsValidToken = async () => {
   try {
-      const res = await axios.post(`${rootApi}/auth/introspect?token=${isLogin}`,{
-        headers:{
-           'Authorization': `Bearer ${isLogin}`
-        }
-      });
-      if(res.data.status === 200) {
-        isValidToken.value = true;
+    const res = await axios.post(`${rootApi}/auth/introspect?token=${isLogin}`, {
+      headers: {
+        'Authorization': `Bearer ${isLogin}`
       }
-  }catch(err){
+    });
+    if (res.data.status === 200) {
+      isValidToken.value = true;
+    }
+  } catch (err) {
     console.log(err);
-    
+
   }
 }
 onMounted(() => {
@@ -61,10 +62,8 @@ onMounted(() => {
   if (isLogin === null || !isValidToken) {
     router.push("/login");
   }
-  // if (isSuppoter === false && window.location.href.includes("/teacher")) {
-  //   router.push("/404")
-  // }
 });
+
 </script>
 
 <style scoped>
