@@ -45,11 +45,11 @@ const store = useStore();
 
 const rootApi = process.env.VUE_APP_ROOT_API;
 const courses = ref([]);
-const userID = ref(store.getters.user.id);
+const userID = computed(() => store.getters.user);
 
 const fetchCourses = async () => {
-  const response = await axios.get(`${rootApi}/courses?id=${userID.value}`);
-  courses.value = response.data.result.items.data;
+  const response = await axios.get(`${rootApi}/courses?id=${userID.value.id}`);
+  courses.value = response.data.result.data.items;
 };
 
 onMounted(async () => {
