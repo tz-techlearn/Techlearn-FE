@@ -3,7 +3,8 @@
 
     <ejs-schedule id="Schedule" height="750px" width="100%" ref='scheduleObj' :selectedDate="selectedDate" :eventSettings="eventSettings"
       :actionBegin="onActionBegin" class="calendar" :editorTemplate="'editorTemplate'" :eventRendered="onEventRendered" :popupOpen="popupOpen"
-      :startHour="startHour" :endHour="endHour" :timeScale="timeScale">
+      :startHour="startHour" :endHour="endHour" :timeScale="timeScale" :allowResizing="true" :allowMultiCellSelection="true"
+      :allowMultiRowSelection="true">
       <template v-slot:editorTemplate>
         <table class="custom-event-editor" width="100%" cellpadding="5">
           <tbody>
@@ -137,7 +138,7 @@ const eventSettings = ref({
   batch: false,
   enableTooltip: true,
   allowResizing: true,
-  allowDragAndDrop: true
+  allowDragAndDrop: true,
 });
 
 const store = useStore();
@@ -158,6 +159,7 @@ const dropListFields = {
 }
 
 const getOwnerDataSource = async () => {
+
   const res = await axios.get(`${rootApi}/teachers/`, {
     headers: {
       'Authorization': `Bearer ${accessToken}`
@@ -219,8 +221,8 @@ const onEventRendered = (args) => {
           <div class="d-flex align-items-center">
             ${avatarHtml}
             <div class="text-truncate" style="max-width: ${availableWidth}px;">
-              <div class="text-truncate">${subjectText}</div>
-              <div class="text-truncate small">
+              <div class="e-subject text-truncate">${subjectText}</div>
+              <div class="e-time text-truncate small">
                 ${startTime} - ${endTime}
               </div>
             </div>
@@ -305,6 +307,17 @@ const onActionBegin = async (args) => {
     }
   } else if (args.requestType === 'eventRemove') {
     try {
+      const eventStartTime = new Date(args.data[0].StartTime);
+      const currentTime = new Date();
+      const timeDifference = (eventStartTime - currentTime) / (1000 * 60);
+
+      if (timeDifference <= 10 && timeDifference >= 0) {
+        toast.error('Không thể hủy lịch trong vòng 10 phút trước khi bắt đầu!', {
+          autoClose: 1000
+        });
+        return;
+      }
+
       isLoading.value = true;
       await axios.delete(`${props.url}/${args.data[0].Id}`, {
         headers: {
@@ -335,7 +348,9 @@ const onActionBegin = async (args) => {
         let formattedEventData = {
           ...args.data,
           StartTime: formatDate(args.data.StartTime),
-          EndTime: formatDate(args.data.EndTime)
+          EndTime: formatDate(args.data.EndTime),
+          StartTimezone: 'Asia/Bangkok',
+          EndTimezone: 'Asia/Bangkok',
         };
 
         const response = await axios.put(`${props.url}/${formattedEventData.Id}`, formattedEventData, {
@@ -345,8 +360,6 @@ const onActionBegin = async (args) => {
             'Accept': 'application/json'
           }
         });
-
-        console.log(response);
 
         toast.success('Cập nhật lịch thành công!', {
           autoClose: 1000
