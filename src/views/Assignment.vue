@@ -22,6 +22,14 @@
             <button class="search-btn btn btn-primary ml-2" @click="fetchFilteredData">
               Tìm kiếm
             </button>
+            <button class="search-btn btn btn-primary ml-2" @click="
+              router.push({
+                name: 'studentCalendar',
+                params: { courseId: courseId }
+              })
+            ">
+            Đặt lịch học
+            </button>
           </div>
           <button class="search-btn btn btn-primary d-lg-none ml-2" @click="fetchFilteredData">
             Tìm kiếm
@@ -87,6 +95,7 @@ const filteredChapters = ref([]);
 const searchQuery = ref("");
 const selectedFilter = ref("all");
 const totalLessons = ref(0);
+const courseId = route.params.id;
 
 const userId = route.query.userID;
 
