@@ -17,22 +17,12 @@
           <h5 class="card-title mb-4">Tìm kiếm lịch</h5>
           <form @submit.prevent="searchCalendar" class="calendar-search-form">
             <div class="row g-3 align-items-end">
-              <!-- <div class="col-md-4">
-                <label class="form-label" for="course">Khóa học</label>
-                <select class="form-select" name="course" v-model="course" @change="onCourseChange">
-                  <option :value="null" disabled selected hidden>Chọn Khóa học</option>
-                  <option class="modify-option" v-for="course in listCourse" :key="course.id" :value="course">
-                    {{ course.name }}
-                  </option>
-                </select>
-                <small class="text-danger">{{ courseError }}</small>
-              </div> -->
               <div class="col-md-4">
                 <label class="form-label" for="chapter">Chương</label>
-                <select class="form-select" id="chapter" v-model="chapter" @change="onChuongChange">
+                <select class="form-select" id="chapter" v-model="chapter" @change="onChapterChange">
                   <option :value="null" disabled selected hidden>Chọn chương</option>
-                  <option class="modify-option" v-for="chapter in listChapters" :key="chapter.id" :value="chapter">
-                    {{ chapter.name }}
+                  <option class="modify-option" v-for="chap in listChapters" :key="chap.id" :value="chap">
+                    {{ chap.name }}
                   </option>
                 </select>
                 <small class="text-danger">{{ chapterError }}</small>
@@ -41,8 +31,8 @@
                 <label class="form-label" for="teacher">Giảng viên</label>
                 <select class="form-select" id="teacher" v-model="teacher">
                   <option :value="null" selected>Chọn giảng viên</option>
-                  <option class="modify-option" v-for="teacher in teachers" :key="teacher.Id" :value="teacher">
-                    {{ teacher.OwnerText }}
+                  <option class="modify-option" v-for="teach in teachers" :key="teach.Id" :value="teach">
+                    {{ teach.OwnerText }}
                   </option>
                 </select>
               </div>
@@ -58,13 +48,14 @@
 
       <div class="card">
         <div class="card-body">
-          <Calendar :url="stateButtonFormStudent ? url : urlCalendarOfStudent" :clickable="isFilterApplied"
-            :calendarType="stateButtonFormStudent ? 'other' : 'mine'" :ownerId="stateButtonFormStudent ? ownerId : ''" />
+          <Calendar :url="calendarUrl" :clickable="isFilterApplied"
+            :calendarType="stateButtonFormStudent ? 'other' : 'mine'" :ownerId="ownerId" />
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import axios from 'axios';
@@ -109,7 +100,7 @@ const listChapters = ref([]);
 const user = computed(() => store.getters.user);
 const isFilterApplied = ref(false);
 const route = useRoute();
-const courseId = route.params?.courseId;
+const courseId = route.params.id;
 
 const toggleCalendarForm = () => {
   stateButtonFormStudent.value = !stateButtonFormStudent.value;
@@ -131,7 +122,7 @@ const getChapters = async () => {
         'Authorization': `Bearer ${accessToken}`
       }
     });
-    listChapters.value = res.data.result.items.data;
+    listChapters.value = res.data.result.data;
   } catch (error) {
     console.log(error);
   }
