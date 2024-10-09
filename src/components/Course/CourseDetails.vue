@@ -40,12 +40,8 @@
               {{ dataCourse.course.currencyUnit }}
             </p>
             <div class="d-grid gap-2 d-md-block">
-              <button
-                class="btn btn-primary custom-button btn-buy w-40"
-                type="button"
-                @click="handleBuyCourse"
-                :disabled="isLoadingBuy"
-              >
+              <button class="btn btn-primary custom-button btn-buy w-40" type="button" @click="handleBuyCourse"
+                :disabled="isLoadingBuy">
                 <span v-if="isLoadingBuy">
                   <div class="spinner"></div>
                 </span>
@@ -65,23 +61,15 @@
               {{ dataCourse.course.currencyUnit }}
             </p>
             <div class="d-grid gap-2 d-md-block">
-              <button
-                class="btn btn-primary custom-button btn-buy w-40"
-                type="button"
-                @click="handleBuyCourse"
-                :disabled="isLoadingBuy"
-              >
+              <button class="btn btn-primary custom-button btn-buy w-40" type="button" @click="handleBuyCourse"
+                :disabled="isLoadingBuy">
                 <span v-if="isLoadingBuy">
                   <div class="spinner"></div>
                 </span>
                 <span v-else>Mua</span>
               </button>
-              <button
-                class="btn btn-primary custom-button btn-try w-40"
-                type="button"
-                @click="handleRegisterCourse"
-                :disabled="isLoadingTrial"
-              >
+              <button class="btn btn-primary custom-button btn-try w-40" type="button" @click="handleRegisterCourse"
+                :disabled="isLoadingTrial">
                 <span v-if="isLoadingTrial">
                   <div class="spinner"></div>
                 </span>
@@ -101,21 +89,12 @@
       </div>
       <div class="content-body mt-3">
         <div id="accordion">
-          <div
-            class="card body-wrapper list-chapter"
-            v-for="(chapter, index) in filteredChapters"
-            :key="index"
-          >
+          <div class="card body-wrapper list-chapter" v-for="(chapter, index) in filteredChapters" :key="index">
             <div v-if="studentCourse.status === 'PAID'">
               <div class="card-header" :id="'heading' + index">
                 <h5 class="mb-0">
-                  <button
-                    class="btn chapter-title w-100 d-flex justify-content-left"
-                    type="button"
-                    data-toggle="collapse"
-                    :data-target="'#collapse' + index"
-                    :aria-controls="'collapse' + index"
-                  >
+                  <button class="btn chapter-title w-100 d-flex justify-content-left" type="button"
+                    data-toggle="collapse" :data-target="'#collapse' + index" :aria-controls="'collapse' + index">
                     <span>
                       <i class="fas fa-angle-down"></i>&nbsp;
                       <strong> {{ index + 1 }}.</strong> {{ chapter.name }}
@@ -123,23 +102,11 @@
                   </button>
                 </h5>
               </div>
-              <div
-                :id="'collapse' + index"
-                :class="index === 0 ? 'collapse show' : 'collapse'"
-                :aria-labelledby="'heading' + index"
-              >
+              <div :id="'collapse' + index" :class="index === 0 ? 'collapse show' : 'collapse'"
+                :aria-labelledby="'heading' + index">
                 <div v-for="(item, itemIndex) in lessons" :key="itemIndex">
-                  <div
-                    class="card-body assignment-card border-bottom"
-                    v-if="Number(item?.chapter) === Number(chapter?.id)"
-                    @click="
-                      router.push({
-                        name: 'submitAssignment',
-                        params: { id: item.id },
-                        query: { courseId: dataCourse.course.id },
-                      })
-                    "
-                  >
+                  <div class="card-body assignment-card border-bottom"
+                    v-if="Number(item?.chapter) === Number(chapter?.id)" @click="goToAssignmentDetail(item.id)">
                     <div class="assignment">
                       <p class="assignment-title">
                         {{ item.title }}
@@ -153,13 +120,9 @@
               <div v-if="chapter.isPublic === false">
                 <div class="card-header bg-col" :id="'heading' + index">
                   <h5 class="mb-0">
-                    <button
-                      class="btn chapter-title w-100 d-flex justify-content-between align-items-center"
-                      type="button"
-                      data-toggle="collapse"
-                      :data-target="'#collapse' + index"
-                      :aria-controls="'collapse' + index"
-                    >
+                    <button class="btn chapter-title w-100 d-flex justify-content-between align-items-center"
+                      type="button" data-toggle="collapse" :data-target="'#collapse' + index"
+                      :aria-controls="'collapse' + index">
                       <span>
                         <i class="fas fa-angle-down"></i>&nbsp;
                         <strong> {{ index + 1 }}.</strong> {{ chapter.name }}
@@ -168,20 +131,12 @@
                     </button>
                   </h5>
                 </div>
-                <div
-                  :id="'collapse' + index"
-                  :class="index === 0 ? 'collapse show' : 'collapse'"
-                  :aria-labelledby="'heading' + index"
-                >
+                <div :id="'collapse' + index" :class="index === 0 ? 'collapse show' : 'collapse'"
+                  :aria-labelledby="'heading' + index">
                   <div v-for="(item, itemIndex) in lessons" :key="itemIndex">
-                    <div
-                      class="card-body"
-                      v-if="Number(item?.chapter) === Number(chapter?.id)"
-                    >
-                      <div
-                        class="assignment d-flex justify-content-between align-items-center w-100"
-                        style="cursor: context-menu"
-                      >
+                    <div class="card-body" v-if="Number(item?.chapter) === Number(chapter?.id)">
+                      <div class="assignment d-flex justify-content-between align-items-center w-100"
+                        style="cursor: context-menu">
                         <p>
                           {{ item.title }}
                         </p>
@@ -194,13 +149,8 @@
               <div v-else>
                 <div class="card-header bg-col" :id="'heading' + index">
                   <h5 class="mb-0">
-                    <button
-                      class="btn chapter-title w-100 d-flex justify-content-left"
-                      type="button"
-                      data-toggle="collapse"
-                      :data-target="'#collapse' + index"
-                      :aria-controls="'collapse' + index"
-                    >
+                    <button class="btn chapter-title w-100 d-flex justify-content-left" type="button"
+                      data-toggle="collapse" :data-target="'#collapse' + index" :aria-controls="'collapse' + index">
                       <span>
                         <i class="fas fa-angle-down"></i>&nbsp;
                         <strong> {{ index + 1 }}.</strong> {{ chapter.name }}
@@ -208,23 +158,11 @@
                     </button>
                   </h5>
                 </div>
-                <div
-                  :id="'collapse' + index"
-                  :class="index === 0 ? 'collapse show' : 'collapse'"
-                  :aria-labelledby="'heading' + index"
-                >
+                <div :id="'collapse' + index" :class="index === 0 ? 'collapse show' : 'collapse'"
+                  :aria-labelledby="'heading' + index">
                   <div v-for="(item, itemIndex) in lessons" :key="itemIndex">
-                    <div
-                      class="card-body assignment-card border-bottom"
-                      v-if="Number(item?.chapter) === Number(chapter?.id)"
-                      @click="
-                        router.push({
-                          name: 'submitAssignment',
-                          params: { id: item.id },
-                          query: { courseId: dataCourse.course.id },
-                        })
-                      "
-                    >
+                    <div class="card-body assignment-card border-bottom"
+                      v-if="Number(item?.chapter) === Number(chapter?.id)" @click="goToAssignmentDetail(item.id)">
                       <div class="assignment">
                         <p class="assignment-title">
                           {{ item.title }}
@@ -306,14 +244,14 @@ const fetchLessons = async () => {
         title: titleUpdated,
       };
     });
-  } catch (error) {}
+  } catch (error) { }
 };
 
 const fetchCourse = async () => {
   try {
     const response = await axios.get(`${rootApi}/courses/${courseId}`);
     dataCourse.course = response.data.result.data;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 const fetchStudentCourses = async () => {
@@ -361,6 +299,14 @@ const isTrial = computed(() => studentCourse.status === "TRIAL");
 const isOtherStatus = computed(
   () => studentCourse.status !== "TRIAL" && studentCourse.status !== "PAID"
 );
+
+const goToAssignmentDetail = (id) => {
+  router.push({
+    name: 'submitAssignment',
+    params: { id: id },
+    query: { studentCourse: JSON.stringify(studentCourse) }
+  });
+};
 
 onMounted(async () => {
   await Promise.all([
@@ -532,6 +478,7 @@ img {
 .bg-col {
   background-color: #e0e0e000 !important;
 }
+
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-left: 4px solid white;
