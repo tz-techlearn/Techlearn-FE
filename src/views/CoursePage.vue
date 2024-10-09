@@ -4,7 +4,7 @@
       <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-4" v-for="(course, index) in courses" :key="index">
         <div class="card shadow mx-2 d-flex flex-column" style="width: 100%">
           <img :src="course.thumbnailUrl" class="card-img-top" alt="Course thumbnail" />
-          <p class="trying p-1" v-if="isPaid(course.id)" >
+          <p class="trying p-1" v-if="isTrial(course.id)" >
             Đang học thử
           </p>
           <div class="card-body d-flex flex-column flex-grow-1">
