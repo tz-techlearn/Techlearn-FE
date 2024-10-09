@@ -115,7 +115,6 @@ const description = ref(null);
 const lastResult = ref();
 const userID = computed(() => store.getters.user);
 const assignmentId = route.params.id;
-const courseId = route.query.courseId;
 const isPassed = ref(false);
 const active = ref(false);
 const studentCourse = reactive({});
@@ -238,26 +237,14 @@ const viewSolution = () => {
 
 const isStatus = computed(() => studentCourse.status === 'TRIAL' || studentCourse.status === 'PAID');
 
-const fetchStudentCourses = async () => {
-  try {
-    const response = await axios.get(
-      `${rootApi}/student-courses/user`, {
-      params: {
-        idCourse: courseId,
-        idUser: userID.value.id
-      }
-    }
-    );
-    Object.assign(studentCourse, response.data.result);
-  } catch (error) {
-    console.error("Error when fetching student courses: ", error);
-  }
-};
-
 onMounted(async () => {
   await fetchAssignments();
   await fetchLastResult();
-  await fetchStudentCourses();
+  if (route.query.studentCourse) {
+    Object.assign(studentCourse, JSON.parse(route.query.studentCourse)); 
+    console.log("StudentCourse:", studentCourse);
+    console.log("Status:", studentCourse.status);
+  }
 });
 </script>
 
