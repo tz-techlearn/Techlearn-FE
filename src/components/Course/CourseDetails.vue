@@ -39,19 +39,6 @@
               }}
               {{ dataCourse.course.currencyUnit }}
             </p>
-            <div class="d-grid gap-2 d-md-block">
-              <!-- <button
-                class="btn btn-primary custom-button btn-buy w-40"
-                type="button"
-                @click="handleRegisterCourse"
-                :disabled="isLoadingBuy"
-              >
-                <span v-if="isLoadingBuy">
-                  <div class="spinner"></div>
-                </span>
-                <span v-else="course.status == 'Trial'">Đăng ký học thử</span>
-              </button> -->
-            </div>
           </div>
           <div v-if="isOtherStatus">
             <p class="title">
@@ -64,6 +51,19 @@
               }}
               {{ dataCourse.course.currencyUnit }}
             </p>
+            <div class="d-grid gap-2 d-md-block" v-if="studentCourse?.status === ''">
+              <button
+                class="btn btn-primary custom-button btn-buy w-40"
+                type="button"
+                @click="handleRegisterCourse"
+                :disabled="isLoadingBuy"
+              >
+                <!-- <span v-if="isLoadingBuy">
+                  <div class="spinner"></div>
+                </span> -->
+                <span >Đăng ký học thử </span>
+              </button>
+            </div>
             <!-- <div class="d-grid gap-2 d-md-block">
               <button
                 class="btn btn-primary custom-button btn-buy w-40"
@@ -212,7 +212,7 @@ const dataCourse = reactive({
   course: {},
 });
 
-const studentCourse = reactive({});
+const studentCourse = reactive({status:''});
 
 const totalLessons = ref(0);
 
@@ -273,8 +273,12 @@ const fetchStudentCourses = async () => {
     Object.assign(studentCourse, response.data.result);
   } catch (error) {
     console.error("Error when fetching student courses: ", error);
+    if (error.response && error.response.status === 400) {
+      Object.assign(studentCourse, { status: '' });
+    }
   }
 };
+
 
 const calculateTotalLessons = (chapters) => {
   return chapters ? chapters.length : 0;
