@@ -43,7 +43,7 @@ const isSidebarCollapsed = inject("isSidebarCollapsed");
 const store = useStore();
 const user = computed(() => store.getters.user);
 
-const initialActive = parseInt(localStorage.getItem("isActive")) || 1;
+const initialActive = parseInt(localStorage.getItem("isActive")) || 2;
 const isActive = ref(initialActive);
 
 onMounted(() => {
