@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-4" v-for="(course, index) in courses" :key="index">
-        <div class="card shadow mx-2 d-flex flex-column" style="width: 100%">
+        <div class="card shadow mx-2 d-flex flex-column" style="width: 100%" @click="navigateToAssignment(course.id)">
           <img :src="course.thumbnailUrl" class="card-img-top" alt="Course thumbnail" />
           <p class="trying p-1" v-if="isTrial(course.id)" >
             Đang học thử
@@ -22,7 +22,7 @@
             <div class="spinner"></div>
           </div>
           <div v-else class="d-flex gap-2 justify-content-center pb-3 container">
-            <button v-if="isTrial(course.id)" type="button" class="btn btn-primary btn-buy-only px-2" @click="navigateAssignment(course.id)"
+            <button v-if="isTrial(course.id)" type="button" class="btn btn-primary btn-buy-only px-2" @click="navigateToAssignment(course.id)"
               >
               Học
             </button>
@@ -97,13 +97,6 @@ const isPaid = (courseId) => {
 };
 
 const navigateToAssignment = (courseId) => {
-  router.push({
-    name: "lesson",
-    params: { id: courseId },
-  });
-};
-
-const navigateAssignment = (courseId) => {
   router.push({
     name: "courseDetail",
     params: { id: courseId },
