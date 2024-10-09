@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid ">
     <div class="assignment-container" v-if="assignmentDescription">
+      <h4>{{ assignmentDescription.title }}</h4>
       <div class="assignment-description">
         <div ref="description" class="description-text" v-html="format(assignmentDescription.content)"></div>
       </div>
@@ -22,7 +23,8 @@
         <div class="submit-container">
           <p>Nộp bài tập:</p>
           <div class="input-container mt-3">
-            <input v-on:change="validInputLink()" type="text" placeholder="Thêm link github tại đây" v-model="githubLink" required/>
+            <input v-on:change="validInputLink()" type="text" placeholder="Thêm link github tại đây"
+              v-model="githubLink" required />
             <button @click="submitAssignment" :disabled="isLoading || isPassed"
               :class="{ 'button-disabled': isPassed }">
               <span v-if="isLoading">
@@ -31,13 +33,13 @@
               <span v-else>Nộp bài</span>
             </button>
           </div>
-          <span class="text-danger" >{{errorgithubLink }}</span>
+          <span class="text-danger">{{ errorgithubLink }}</span>
 
         </div>
         <div class="result-container mt-3">
           <div class="result-header">
             <p>Kết quả:</p>
-            <button @click="openModal">Xem lịch sử nộp bài</button>
+            <button @click="openModal" class="m-0">Xem lịch sử nộp bài</button>
           </div>
           <div v-if="lastResult" class="result-AI-container">
             <div class="time-container">
@@ -118,22 +120,22 @@ const isPassed = ref(false);
 const active = ref(false);
 const studentCourse = reactive({});
 const errorCode = {
-  1301 :"Link github được để trống",
-  1302 :"Link github không được tìm thấy hoặc không đúng định dạng",
-  1303 :"Lỗi khi gọi API Github",
-  1901 :"Vượt quá số lượng file cho phép đọc",
+  1301: "Link github được để trống",
+  1302: "Link github không được tìm thấy hoặc không đúng định dạng",
+  1303: "Lỗi khi gọi API Github",
+  1901: "Vượt quá số lượng file cho phép đọc",
 }
 
 function validInputLink() {
-  if(githubLink.value==""){
-    errorgithubLink.value="Vui lòng nhập link github bài tập !"
+  if (githubLink.value == "") {
+    errorgithubLink.value = "Vui lòng nhập link github bài tập !"
     return false
-  } else if(!githubLink.value.startsWith("https://github.com")){
-    errorgithubLink.value="Vui lòng đúng định dạng link github bài tập !"
+  } else if (!githubLink.value.startsWith("https://github.com")) {
+    errorgithubLink.value = "Vui lòng đúng định dạng link github bài tập !"
     return false
   }
-    errorgithubLink.value =""
-   return true;
+  errorgithubLink.value = ""
+  return true;
 }
 
 const openModal = async () => {
@@ -143,11 +145,11 @@ const openModal = async () => {
   try {
     console.log(userID.value.id);
     console.log(assignmentId);
-    
+
     const response = await axios.get(
       `${rootApi}/reviews?id=${userID.value.id}&assignment=${assignmentId}&pageSize=30`
     );
-    response.data.result.items.map((rev, index) => {  
+    response.data.result.items.map((rev, index) => {
 
       result.value.push(rev);
     });
@@ -170,13 +172,15 @@ const fetchAssignments = async () => {
       `${rootApi}/lessons/${assignmentId}`
     );
     assignmentDescription.value = response.data.result.data;
+    console.log(assignmentDescription.value);
+
   } catch (error) {
     console.error("Lỗi khi lấy dữ liệu:", error);
   }
 };
 
 const submitAssignment = async () => {
-  if( !validInputLink()){
+  if (!validInputLink()) {
     return false;
   }
   try {
@@ -195,14 +199,14 @@ const submitAssignment = async () => {
     isLoading.value = false;
     console.log(isPassed.value);
     console.log(data);
-    
-    
+
+
   } catch (error) {
     console.log(error.response.data.message);
     isLoading.value = false;
     toast.error(errorCode[error.response.data.code], {
-            autoClose: 2000,
-          });
+      autoClose: 2000,
+    });
   }
 };
 
@@ -271,7 +275,7 @@ onMounted(async () => {
 
 .description-text {
   font-size: 17px;
-  margin-left: 12px;
+  /* margin-left: 12px; */
   font-family: Avenir, Helvetica, Arial, sans-serif;
   margin-top: 15px;
   margin-bottom: 20px;
@@ -306,8 +310,8 @@ onMounted(async () => {
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
-  margin-right: 30px;
-  margin-left: 15px;
+  /* margin-right: 30px;
+  margin-left: 15px; */
 }
 
 .input-container input {

@@ -2,28 +2,17 @@
   <div class="container">
     <p class="title">Khóa học của tôi</p>
     <div class="card-container relative">
-      <div
-        class="card relative shadow card-hover"
-        v-for="(studentCourse, index) in student_courses"
-        :key="index"
-        style="width: 18rem"
-      >
+      <div class="card relative shadow card-hover" v-for="(studentCourse, index) in student_courses" :key="index"
+        style="width: 18rem">
         <template v-if="getCourseDetails(studentCourse.idCourse)">
           <p class="trying p-1" v-if="studentCourse.status === 'TRIAL'">
             Đang học thử
           </p>
-          <img
-            :src="getCourseDetails(studentCourse.idCourse).thumbnailUrl"
-            class="card-img-top"
-            alt="..."
-          />
-          <div
-            class="card-body p-3"
-            @click="navigateToAssignment(studentCourse.idCourse)"
-          >
-            <h5>{{ getCourseDetails(studentCourse.idCourse).name }}</h5>
+          <img :src="getCourseDetails(studentCourse.idCourse).thumbnailUrl" class="card-img-top" alt="..." />
+          <div class="card-body p-3" @click="navigateToAssignment(studentCourse.idCourse)">
+            <h5>{{ getCourseDetails(studentCourse.idCourse)?.name }}</h5>
             <p class="course-des card-text">
-              {{ getCourseDetails(studentCourse.idCourse).description }}
+              {{ getCourseDetails(studentCourse.idCourse)?.description }}
             </p>
           </div>
           <div class="c-footer py-1">
@@ -31,24 +20,18 @@
             <p class="my-auto">
               {{
                 getCourseDetails(studentCourse.idCourse).teacher.length > 1
-                  ? getCourseDetails(studentCourse.idCourse).teacher[0].name +
-                    "..."
-                  : getCourseDetails(studentCourse.idCourse).teacher[0].name
+                  ? getCourseDetails(studentCourse.idCourse).teacher[0]?.name +
+                  "..."
+                  : getCourseDetails(studentCourse.idCourse).teacher[0]?.name
               }}
             </p>
           </div>
-          <div
-            v-if="loadingStates[index]"
-            class="d-flex justify-content-center pb-3"
-          >
+          <div v-if="loadingStates[index]" class="d-flex justify-content-center pb-3">
             <div class="spinner"></div>
           </div>
-          <button
-            v-else
-            class="btn btn-primary mx-3 my-2 btn-buy"
-            @click="handleClick(studentCourse, index)"
-          >
-            {{ studentCourse.status === "PAID" ? "Học" : "Mua" }}
+          <button v-else class="btn btn-primary mx-3 my-2 btn-buy" @click="handleClick(studentCourse, index)">
+            <!-- {{ studentCourse.status === "PAID" ? "Học" : "Mua" }} -->
+            Học
           </button>
         </template>
       </div>
@@ -115,8 +98,8 @@ const handleClick = async (studentCourse, index) => {
 };
 
 onMounted(async () => {
-  await fetchStudentCourses();
   await fetchCourses();
+  await fetchStudentCourses();
 });
 </script>
 
@@ -243,6 +226,7 @@ onMounted(async () => {
   color: #333;
   font-weight: 500;
 }
+
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-left: 4px solid white;
