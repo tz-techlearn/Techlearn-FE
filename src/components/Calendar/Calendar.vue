@@ -261,7 +261,6 @@ const onActionBegin = async (args) => {
         await axios.post(`${rootApi}/student/${user.value.id}/calendar`, {
           ...formattedEventData,
           UserId: user.value.id,
-          status: "BOOKED",
           OwnerId: props.ownerId
         }, {
           headers: {
