@@ -6,39 +6,28 @@
       </div>
       <ul class="list-unstyled components">
         <li v-if="isTeacher || isMentor" @click="changeActive(1)">
-          <router-link
-            to="/teacher"
-            :class="active == 1 ? 'nav-link active' : 'nav-link'"
-            exact
-            >Lịch cá nhân</router-link
-          >
+          <router-link to="/teacher" :class="isActive == 1 ? 'nav-link active' : 'nav-link'" exact>Lịch cá
+            nhân</router-link>
         </li>
         <!-- <li v-if="isUser">
           <router-link to="/student" class="nav-link">Đặt lịch học</router-link>
         </li> -->
         <li v-if="isTeacher" @click="changeActive(2)">
-          <router-link
-            to="/listPrompt"
-            :class="active == 2 ? 'nav-link active' : 'nav-link'"
-            exact
-            >Cấu hình AI</router-link
-          >
+          <router-link to="/listPrompt" :class="isActive == 2 ? 'nav-link active router-link-active' : 'nav-link'"
+            exact>Cấu
+            hình
+            AI</router-link>
         </li>
         <li v-if="isUser" @click="changeActive(3)">
-          <router-link
-            to="/coursePage"
-            :class="active == 3 ? 'nav-link active' : 'nav-link'"
-            exact
-            >Khóa học</router-link
-          >
+          <router-link to="/coursePage" :class="isActive == 3 ? 'nav-link active router-link-active' : 'nav-link'"
+            exact>Khóa
+            học</router-link>
         </li>
         <li v-if="isUser" @click="changeActive(4)">
-          <router-link
-            to="/myCoursePage"
-            :class="active == 4 ? 'nav-link active' : 'nav-link'"
-            exact
-            >Khóa học của tôi</router-link
-          >
+          <router-link to="/myCoursePage" :class="isActive == 4 ? 'nav-link active router-link-active' : 'nav-link'"
+            exact>
+            Khóa học của tôi
+          </router-link>
         </li>
       </ul>
     </nav>
@@ -53,7 +42,9 @@ import { useStore } from "vuex";
 const isSidebarCollapsed = inject("isSidebarCollapsed");
 const store = useStore();
 const user = computed(() => store.getters.user);
-const isActive = ref(1);
+
+const initialActive = parseInt(localStorage.getItem("isActive")) || 2;
+const isActive = ref(initialActive);
 
 onMounted(() => {
   if (!store.getters.isLoggedIn) {
@@ -71,8 +62,10 @@ const isMentor = computed(() =>
   user.value?.roles.some((role) => role.name === "MENTOR")
 );
 
+
 const changeActive = (value) => {
   isActive.value = value;
+  localStorage.setItem("isActive", value);
 };
 </script>
 
@@ -149,7 +142,7 @@ const changeActive = (value) => {
   background: #5b5bad;
 }
 
-#sidebar ul li.active > a,
+#sidebar ul li.active>a,
 a[aria-expanded="true"] {
   background: #5b5bad;
 }
