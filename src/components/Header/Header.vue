@@ -103,13 +103,13 @@ const handleLogout = async () => {
                 autoClose: 1200
             });
         });
-        store.commit('setLoggedIn', false);
-        store.commit('setUser', null);
         await axios.get(`${rootApi}/auth/logout`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         });
+        store.commit('setLoggedIn', false);
+        store.commit('setUser', null);
     } catch (err) {
         console.log(err);
     }
