@@ -1,21 +1,13 @@
 <template>
   <div class="container">
     <div class="row">
-      <div
-        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-4"
-        v-for="(course, index) in courses"
-        :key="index"
-      >
+      <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-4" v-for="(course, index) in courses" :key="index">
         <div class="card shadow mx-2 d-flex flex-column" style="width: 100%">
-          <img
-            :src="course.thumbnailUrl"
-            class="card-img-top"
-            alt="Course thumbnail"
-          />
-          <div
-            class="card-body d-flex flex-column flex-grow-1"
-            @click="navigateToAssignment(course.id)"
-          >
+          <img :src="course.thumbnailUrl" class="card-img-top" alt="Course thumbnail" />
+          <p class="trying p-1" v-if="isPaid(course.id)" >
+            Đang học thử
+          </p>
+          <div class="card-body d-flex flex-column flex-grow-1" @click="navigateToAssignment(course.id)">
             <p class="card-name">{{ course.name }}</p>
             <p class="card-total-exercises">{{ course.totalExercises }}</p>
             <p class="card-text flex-grow-1">
@@ -26,47 +18,27 @@
             <img class="avatar" :src="avatar" alt="Teacher avatar" />
             <p class="my-auto">{{ course?.teacher[0]?.name }}</p>
           </div>
-          <div
-            v-if="loadingStates[index]"
-            class="d-flex justify-content-center pb-3"
-          >
+          <div v-if="loadingStates[index]" class="d-flex justify-content-center pb-3">
             <div class="spinner"></div>
           </div>
-          <div
-            v-else
-            class="d-flex gap-2 justify-content-center pb-3 container"
-          >
-            <button
-              v-if="isTrial(course.id)"
-              type="button"
-              class="btn btn-primary btn-buy-only px-2"
-              @click.stop="handleBuyCourse(course.id, userID, index)"
-            >
-              Mua
+          <div v-else class="d-flex gap-2 justify-content-center pb-3 container">
+            <button v-if="isTrial(course.id)" type="button" class="btn btn-primary btn-buy-only px-2"
+              @click.stop="handleTryCourse(course.id, userID, index)">
+              Đăng ký học thử
             </button>
-            <button
-              v-else-if="isPaid(course.id)"
-              type="button"
-              class="btn btn-primary btn-learn-only"
-            >
+            <button v-else="isPaid(course.id)" type="button" class="btn btn-primary btn-learn-only" @click="navigateAssignment(course.id)">
               Học
             </button>
-            <div v-else class="d-flex gap-2 justify-content-center w-100">
-              <button
-                type="button"
-                class="btn btn-primary btn-buy w-40"
-                @click.stop="handleBuyCourse(course.id, userID, index)"
-              >
+            <!-- <div v-else class="d-flex gap-2 justify-content-center w-100">
+              <button type="button" class="btn btn-primary btn-buy w-40"
+                @click.stop="handleBuyCourse(course.id, userID, index)">
                 Mua
-              </button>
-              <button
-                type="button"
-                class="btn btn-primary btn-try w-40"
-                @click.stop="handleTryCourse(course.id, userID, index)"
-              >
+              </button> 
+              <button type="button" class="btn btn-primary btn-try w-40"
+                @click.stop="handleTryCourse(course.id, userID, index)">
                 Học thử
               </button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -128,13 +100,20 @@ const navigateToAssignment = (courseId) => {
   });
 };
 
+const navigateAssignment = (courseId) => {
+  router.push({
+    name: "courseDetail",
+    params: { id: courseId },
+  });
+};
+
 const truncatedDescriptions = (description) => {
   return description.length > 120
     ? description.substring(0, 120) + "..."
     : description;
 };
 
-const handleBuyCourse = async (IdCourse, userID, index) => {
+/* const handleBuyCourse = async (IdCourse, userID, index) => {
   try {
     loadingStates.value[index] = true; // Set loading state for the specific button
     const response = await axios.post(
@@ -150,20 +129,17 @@ const handleBuyCourse = async (IdCourse, userID, index) => {
   } finally {
     loadingStates.value[index] = false; // Reset loading state after the request
   }
-};
+}; */
 
 const handleTryCourse = async (IdCourse, userID, index) => {
   try {
     loadingStates.value[index] = true; // Set loading state for the specific button
-    const response = await axios.post(
-      `${rootApi}/register_trials?idUser=${userID.id}&idCourse=${IdCourse}`
-    );
+    const response = await axios.post(`${rootApi}/register_trials?idUser=${userID.id}&idCourse=${IdCourse}`);
     toast.success("Đăng kí dùng thử khóa học thành công");
     studentCourses.status = "TRIAL";
     store.dispatch("fetchSupportPoints", userID.id);
     await fetchStudentCourses();
   } catch (error) {
-    console.log(error);
     toast.error("Có lỗi xảy ra");
   } finally {
     loadingStates.value[index] = false; // Reset loading state after the request
@@ -184,9 +160,9 @@ onMounted(async () => {
   gap: 30px;
 }
 
-.w-40 {
+/* .w-40 {
   width: 50%;
-}
+} */
 
 .card-img-top {
   width: 100%;
@@ -247,7 +223,7 @@ onMounted(async () => {
 }
 
 .card-name {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 500;
 }
 
@@ -269,7 +245,7 @@ onMounted(async () => {
   font-weight: 400;
   transition: background-color 0.1s ease;
 }
-
+/* 
 .btn-try {
   background-color: rgba(99, 151, 206, 0.42);
   color: rgba(0, 0, 0, 1);
@@ -278,16 +254,25 @@ onMounted(async () => {
 .btn-try:hover {
   background-color: rgba(3, 125, 255, 0.568);
   color: rgba(0, 0, 0, 1);
-}
+} */
 
-.btn-buy {
+/* .btn-buy {
   background-color: rgba(212, 28, 37, 0.541);
   color: rgba(0, 0, 0, 1);
-}
+} */
 
 .btn-buy-only {
   background-color: rgba(212, 28, 37, 0.541);
   color: rgba(0, 0, 0, 1);
+  width: 100%;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 1);
+}
+
+.btn-buy-only:hover {
+  font-size: 14px;
+  background-color: rgba(190, 47, 47, 0.651);
+  color: white(0, 0, 0, 1);
   width: 100%;
 }
 
@@ -295,18 +280,53 @@ onMounted(async () => {
   width: 100%;
   background-color: #00e3cc;
   color: rgba(0, 0, 0, 1);
+  font-size: 14px;
 }
 
 .btn-learn-only:hover {
+  width: 100%;
   background-color: #03b3a1;
-  color: rgba(0, 0, 0, 1);
+  color: white(0, 0, 0, 1);
+  font-size: 14px;
 }
 
-.btn-buy:hover,
+/* .btn-buy:hover,
 .btn-buy-only:hover {
   background-color: rgba(190, 47, 47, 0.651);
   color: rgba(0, 0, 0, 1);
+} */
+
+.trying {
+  position: absolute;
+  display: inline-block;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  clip-path: polygon(20px 0px, 100% 0px, 100% 100%, 0% 100%, 0% 20px);
+  background: yellow;
+  padding: 16px 40px;
+  margin: 0 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: red;
+  top: 10px;
+  right: 0;
+  width: 105px;
+  text-align: right;
 }
+
+.trying:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background: rgb(211, 211, 0);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 6px 0;
+  transition: transform 500ms;
+}
+
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-left: 4px solid white;

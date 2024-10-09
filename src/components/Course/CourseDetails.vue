@@ -40,12 +40,16 @@
               {{ dataCourse.course.currencyUnit }}
             </p>
             <div class="d-grid gap-2 d-md-block">
-              <button class="btn btn-primary custom-button btn-buy w-40" type="button" @click="handleBuyCourse"
-                :disabled="isLoadingBuy">
+              <button
+                class="btn btn-primary custom-button btn-buy w-40"
+                type="button"
+                @click="handleRegisterCourse"
+                :disabled="isLoadingBuy"
+              >
                 <span v-if="isLoadingBuy">
                   <div class="spinner"></div>
                 </span>
-                <span v-else>Mua</span>
+                <span v-else>Đăng ký học thử</span>
               </button>
             </div>
           </div>
@@ -60,9 +64,13 @@
               }}
               {{ dataCourse.course.currencyUnit }}
             </p>
-            <div class="d-grid gap-2 d-md-block">
-              <button class="btn btn-primary custom-button btn-buy w-40" type="button" @click="handleBuyCourse"
-                :disabled="isLoadingBuy">
+            <!-- <div class="d-grid gap-2 d-md-block">
+              <button
+                class="btn btn-primary custom-button btn-buy w-40"
+                type="button"
+                @click="handleBuyCourse"
+                :disabled="isLoadingBuy"
+              >
                 <span v-if="isLoadingBuy">
                   <div class="spinner"></div>
                 </span>
@@ -75,7 +83,7 @@
                 </span>
                 <span v-else>Đăng kí dùng thử</span>
               </button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -346,7 +354,7 @@ const handleRegisterCourse = async () => {
       `${rootApi}/register_trials?idUser=${userID.value.id}&idCourse=${dataCourse.course.id}`
     );
     store.dispatch("fetchSupportPoints", userID.value.id);
-    toast.success("Đăng kí khóa học thành công!!");
+    toast.success("Đăng kí dùng thử khóa học thành công!!");
     await Promise.all([
       fetchCourseData(),
       fetchLessons(),
@@ -440,7 +448,7 @@ p {
   border: none;
 }
 
-.assignment-title {
+assignment-title {
   font-size: 16px;
   line-height: 30px;
 }
@@ -449,7 +457,7 @@ button.btn.chapter-title.collapsed:active {
   border: none;
 }
 
-button.btn.chapter-title.collapsed {
+.button.btn.chapter-title.collapsed {
   border: none;
 }
 
@@ -463,16 +471,18 @@ img {
   margin-bottom: 10px !important;
 }
 
-.custom-button {
+.custom-button.btn-buy.w-40 {
   width: 30%;
-  background-color: #add8e6;
-  border-color: #add8e6;
+  background-color:  rgba(212, 28, 37, 0.541);
+  border-color: white;
   margin-right: 2rem;
+  color: rgba(0, 0, 0, 1);
 }
 
-.custom-button:hover {
-  background-color: #87ceeb;
-  border-color: #87ceeb;
+.custom-button.btn-buy.w-40:hover {
+  background-color: rgba(190, 47, 47, 0.651);
+  border-color: white;
+  color: white;
 }
 
 .bg-col {
