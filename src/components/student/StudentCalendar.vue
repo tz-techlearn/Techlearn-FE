@@ -102,7 +102,11 @@ const courseId = route.params.id;
 
 const toggleCalendarForm = () => {
   stateButtonFormStudent.value = !stateButtonFormStudent.value;
-  console.log(stateButtonFormStudent.value);
+  if (!stateButtonFormStudent.value) {
+    isFilterApplied.value = false;
+    resetForm();
+    getAllCalendars();
+  }
   
 };
 
@@ -161,6 +165,7 @@ watch(user, (newUser) => {
     if (newUser) {
        getChapters();
        getTeachers();
+       getAllCalendars();
     }
 }, { immediate: true });
 
