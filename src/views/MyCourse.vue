@@ -29,7 +29,9 @@
           <div v-if="loadingStates[index]" class="d-flex justify-content-center pb-3">
             <div class="spinner"></div>
           </div>
-          <button v-else class="btn btn-primary mx-3 my-2 btn-buy" @click="handleClick(studentCourse, index)">
+          <button v-else class="btn btn-primary mx-3 my-2 btn-buy"
+            @click="navigateToAssignment(studentCourse.idCourse)">
+            <!-- @click="handleClick(studentCourse, index)" -->
             <!-- {{ studentCourse.status === "PAID" ? "Học" : "Mua" }} -->
             Học
           </button>
@@ -80,22 +82,22 @@ const navigateToAssignment = (courseId) => {
   });
 };
 
-const handleClick = async (studentCourse, index) => {
-  try {
-    loadingStates.value[index] = true;
-    if (studentCourse.status === "TRIAL") {
-      const response = await axios.post(
-        `${rootApi}/buy_course?idUser=${userID.value.id}&idCourse=${studentCourse.idCourse}`
-      );
-      await fetchStudentCourses();
-      toast.success("Mua khóa học thành công!");
-    }
-  } catch (error) {
-    console.log(error);
-  } finally {
-    loadingStates.value[index] = false;
-  }
-};
+// const handleClick = async (studentCourse, index) => {
+//   try {
+//     loadingStates.value[index] = true;
+//     if (studentCourse.status === "TRIAL") {
+//       const response = await axios.post(
+//         `${rootApi}/buy_course?idUser=${userID.value.id}&idCourse=${studentCourse.idCourse}`
+//       );
+//       await fetchStudentCourses();
+//       toast.success("Mua khóa học thành công!");
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   } finally {
+//     loadingStates.value[index] = false;
+//   }
+// };
 
 onMounted(async () => {
   await fetchCourses();
