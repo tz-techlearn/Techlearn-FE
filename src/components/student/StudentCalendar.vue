@@ -107,9 +107,8 @@ const toggleCalendarForm = () => {
 };
 
 const getAllCalendars = () => {
-  urlCalendarOfStudent.value = `${rootApi}/student/${user.value.id}/calendar`;
+  url.value = `${rootApi}/student/${user.value.id}/calendar`;
 };
-
 
 const getChapters = async () => {
   try {
@@ -157,6 +156,7 @@ watch(user, (newUser) => {
     if (newUser) {
        getChapters();
        getTeachers();
+       getAllCalendars();
     }
 }, { immediate: true });
 
