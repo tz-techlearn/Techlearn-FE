@@ -40,7 +40,7 @@
               {{ dataCourse.course.currencyUnit }}
             </p>
             <div class="d-grid gap-2 d-md-block">
-              <button
+              <!-- <button
                 class="btn btn-primary custom-button btn-buy w-40"
                 type="button"
                 @click="handleRegisterCourse"
@@ -49,8 +49,8 @@
                 <span v-if="isLoadingBuy">
                   <div class="spinner"></div>
                 </span>
-                <span v-else>Đăng ký học thử</span>
-              </button>
+                <span v-else="course.status == 'Trial'">Đăng ký học thử</span>
+              </button> -->
             </div>
           </div>
           <div v-if="isOtherStatus">

@@ -7,7 +7,7 @@
           <p class="trying p-1" v-if="isPaid(course.id)" >
             Đang học thử
           </p>
-          <div class="card-body d-flex flex-column flex-grow-1" @click="navigateToAssignment(course.id)">
+          <div class="card-body d-flex flex-column flex-grow-1">
             <p class="card-name">{{ course.name }}</p>
             <p class="card-total-exercises">{{ course.totalExercises }}</p>
             <p class="card-text flex-grow-1">
@@ -22,12 +22,15 @@
             <div class="spinner"></div>
           </div>
           <div v-else class="d-flex gap-2 justify-content-center pb-3 container">
-            <button v-if="isTrial(course.id)" type="button" class="btn btn-primary btn-buy-only px-2"
-              @click.stop="handleTryCourse(course.id, userID, index)">
-              Đăng ký học thử
-            </button>
-            <button v-else="isPaid(course.id)" type="button" class="btn btn-primary btn-learn-only" @click="navigateAssignment(course.id)">
+            <button v-if="isTrial(course.id)" type="button" class="btn btn-primary btn-buy-only px-2" @click="navigateAssignment(course.id)"
+              >
               Học
+            </button>
+            <!-- <button v-else="isPaid(course.id)" type="button" class="btn btn-primary btn-learn-only" @click="navigateToAssignment(course.id)">
+              Học
+            </button> -->
+            <button v-else="course.status == ''" type="button" class="btn btn-primary btn-learn-only" @click.stop="handleTryCourse(course.id, userID, index)">
+              Đăng ký học thử
             </button>
             <!-- <div v-else class="d-flex gap-2 justify-content-center w-100">
               <button type="button" class="btn btn-primary btn-buy w-40"
